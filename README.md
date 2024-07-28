@@ -1,6 +1,6 @@
 # Verna DailyGoals
 
-[App screenshot](https://github.com/nicolasdabreo/verna_daily_goals/blob/main/screenshot.png)
+![App screenshot](https://github.com/nicolasdabreo/verna_daily_goals/blob/main/screenshot.png)
 
 To start your Phoenix server:
 
