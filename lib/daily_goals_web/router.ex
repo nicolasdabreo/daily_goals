@@ -1,6 +1,8 @@
 defmodule DailyGoalsWeb.Router do
   use DailyGoalsWeb, :router
 
+  alias DailyGoalsWeb.Persona
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -8,20 +10,15 @@ defmodule DailyGoalsWeb.Router do
     plug :put_root_layout, html: {DailyGoalsWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-  end
-
-  pipeline :api do
-    plug :accepts, ["json"]
+    plug Persona
   end
 
   scope "/", DailyGoalsWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
-  end
+    live_session :application, on_mount: [Persona] do
+      get "/", PageController, :home
 
-  # Other scopes may use custom stacks.
-  # scope "/api", DailyGoalsWeb do
-  #   pipe_through :api
-  # end
+    end
+  end
 end

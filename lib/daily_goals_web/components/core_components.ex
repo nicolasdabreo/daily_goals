@@ -1,19 +1,4 @@
 defmodule DailyGoalsWeb.CoreComponents do
-  @moduledoc """
-  Provides core UI components.
-
-  At first glance, this module may seem daunting, but its goal is to provide
-  core building blocks for your application, such as modals, tables, and
-  forms. The components consist mostly of markup and are well-documented
-  with doc strings and declarative assigns. You may customize and style
-  them in any way you want, based on your application growth and needs.
-
-  The default components use Tailwind CSS, a utility-first CSS framework.
-  See the [Tailwind CSS documentation](https://tailwindcss.com) to learn
-  how to customize them or feel free to swap in another framework altogether.
-
-  Icons are provided by [heroicons](https://heroicons.com). See `icon/1` for usage.
-  """
   use Phoenix.Component
 
   alias Phoenix.LiveView.JS
@@ -668,5 +653,53 @@ defmodule DailyGoalsWeb.CoreComponents do
   """
   def translate_errors(errors, field) when is_list(errors) do
     for {^field, {msg, opts}} <- errors, do: translate_error({msg, opts})
+  end
+
+  attr :class, :string, default: nil
+  attr :rest, :global
+  slot :inner_block, required: true
+
+  def tooltip(assigns) do
+    ~H"""
+    <div
+      class={[
+        "relative group/tooltip inline-flex",
+        @class
+      ]}
+      {@rest}
+    >
+      <%= render_slot(@inner_block) %>
+    </div>
+    """
+  end
+
+  slot :inner_block, required: true
+
+  def tooltip_trigger(assigns) do
+    ~H"""
+    <%= render_slot(@inner_block) %>
+    """
+  end
+
+  attr :class, :string, default: nil
+  attr :rest, :global
+  attr :side, :string, default: "left"
+  slot :inner_block, required: true
+
+  def tooltip_content(assigns) do
+    ~H"""
+    <div
+      class={[
+        "tooltip-content absolute whitespace-nowrap hidden group-hover/tooltip:block top-full mt-2",
+        "z-50 w-auto overflow-hidden rounded-md border bg-zinc-50 px-3 py-1.5 text-sm shadow-md animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        @side == "left" && "right-0",
+        @side == "right" && "left-0",
+        @class
+      ]}
+      {@rest}
+    >
+      <%= render_slot(@inner_block) %>
+    </div>
+    """
   end
 end
