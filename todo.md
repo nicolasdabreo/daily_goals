@@ -1,0 +1,1 @@
+In the aspect of time, I'm considering leaving off casting and validation of changesets and pushing everything straight through to ETS. If I have time at the end I will add those in.

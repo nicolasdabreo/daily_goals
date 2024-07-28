@@ -17,8 +17,7 @@ defmodule DailyGoalsWeb.Router do
     pipe_through :browser
 
     live_session :application, on_mount: [Persona] do
-      get "/", PageController, :home
-
+      live "/", GoalsLive, :index
     end
   end
 end

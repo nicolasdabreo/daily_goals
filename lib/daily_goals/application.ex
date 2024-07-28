@@ -9,6 +9,7 @@ defmodule DailyGoals.Application do
       DailyGoalsWeb.Endpoint
     ]
 
+    DailyGoals.Goals.init_table()
     opts = [strategy: :one_for_one, name: DailyGoals.Supervisor]
     Supervisor.start_link(children, opts)
   end

@@ -186,9 +186,9 @@ defmodule DailyGoalsWeb.CoreComponents do
   def simple_form(assigns) do
     ~H"""
     <.form :let={f} for={@for} as={@as} {@rest}>
-      <div class="mt-10 space-y-8 bg-white">
+      <div class="space-y-8">
         <%= render_slot(@inner_block, f) %>
-        <div :for={action <- @actions} class="mt-2 flex items-center justify-between gap-6">
+        <div :for={action <- @actions} class="mt-2 flex items-center justify-end gap-6">
           <%= render_slot(action, f) %>
         </div>
       </div>
@@ -196,27 +196,30 @@ defmodule DailyGoalsWeb.CoreComponents do
     """
   end
 
-  @doc """
-  Renders a button.
 
-  ## Examples
+  attr(:type, :string, default: nil)
+  attr(:class, :any, default: nil)
 
-      <.button>Send!</.button>
-      <.button phx-click="go" class="ml-2">Send!</.button>
-  """
-  attr :type, :string, default: nil
-  attr :class, :string, default: nil
-  attr :rest, :global, include: ~w(disabled form name value)
+  attr(:variant, :string,
+    values: ~w(default secondary destructive outline ghost link),
+    default: "default",
+    doc: "the button variant style"
+  )
 
-  slot :inner_block, required: true
+  attr(:size, :string, values: ~w(default sm lg icon), default: "default")
+  attr(:rest, :global, include: ~w(disabled form name value))
+
+  slot(:inner_block, required: true)
 
   def button(assigns) do
+    assigns = assign(assigns, :variant_class, variant(assigns))
+
     ~H"""
     <button
       type={@type}
       class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-zinc-900 hover:bg-zinc-700 py-2 px-3",
-        "text-sm font-semibold leading-6 text-white active:text-white/80",
+        "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors disabled:pointer-events-none disabled:opacity-50",
+        @variant_class,
         @class
       ]}
       {@rest}
@@ -224,6 +227,34 @@ defmodule DailyGoalsWeb.CoreComponents do
       <%= render_slot(@inner_block) %>
     </button>
     """
+  end
+
+  @variants %{
+    variant: %{
+      "default" => "bg-indigo-600 text-white shadow hover:bg-indigo-600/90",
+      "destructive" => "bg-rose-50 text-rose-500 shadow-sm hover:bg-rose-700/90",
+      "outline" => "border border-input bg-background shadow-sm hover:bg-zinc-50",
+      "ghost" => "hover:bg-zinc-50 bg-transparent",
+      "link" => "text-indigo-600 underline-offset-4 hover:underline"
+    },
+    size: %{
+      "default" => "h-9 px-4 py-2",
+      "sm" => "h-8 rounded-md px-3 text-xs",
+      "lg" => "h-10 rounded-md px-8",
+      "icon" => "h-9 w-9"
+    }
+  }
+
+  @default_variants %{
+    variant: "default",
+    size: "default"
+  }
+
+  defp variant(props) do
+    variants = Map.take(props, ~w(variant size)a)
+    variants = Map.merge(@default_variants, variants)
+
+    Enum.map_join(variants, " ", fn {key, value} -> @variants[key][value] end)
   end
 
   @doc """
