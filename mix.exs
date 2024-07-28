@@ -48,7 +48,9 @@ defmodule DailyGoals.MixProject do
        depth: 1},
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
-      {:bandit, "~> 1.5"}
+      {:bandit, "~> 1.5"},
+      {:ecto, "~> 3.11"},
+      {:phoenix_ecto, "~> 4.4"}
     ]
   end
 
