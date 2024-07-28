@@ -1,4 +1,6 @@
-# DailyGoals
+# Verna DailyGoals
+
+[App screenshot](https://github.com/nicolasdabreo/verna_daily_goals/screenshot.png)
 
 To start your Phoenix server:
 
@@ -7,7 +9,10 @@ To start your Phoenix server:
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+To run the tests:
+
+  * Run `mix test`
+
 
 ## Initial thoughts
 
