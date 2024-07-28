@@ -28,6 +28,9 @@ defmodule DailyGoalsWeb.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import DailyGoalsWeb.ConnCase
+
+      import Phoenix.Component
+      import Phoenix.LiveViewTest
     end
   end
 

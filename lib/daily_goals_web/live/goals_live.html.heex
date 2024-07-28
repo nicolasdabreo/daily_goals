@@ -35,7 +35,7 @@
       </div>
       <div class="mt-1 flex items-center gap-x-2 text-xs leading-5 text-zinc-500">
         <p class="truncate">
-          Created by
+          Created by <span class="sr-only"><%= @persona.name %></span>
           <.tooltip>
             <DailyGoalsWeb.Layouts.avatar persona={@persona} />
             <.tooltip_content>
