@@ -18,3 +18,9 @@ To begin with, the front-end task sparked more joy on initial read so I'm going 
 I'm going to start out by adding a soft-user persona system so that we have the "idea" of users managing goals but without doing anything crazy. I think I'll also use ETS as storage seeing as its very quick to get off the ground. I might switch to DETS in order to accomodate synthetic data, that or I'll run some kind of seed function on application startup.
 
 For these lighter style apps that utilise ETS, I often like storing state as events so I _might_ do that too here -- I probably will as the reporting feature can then support some more interesting insights.
+
+## Update 1
+
+After doing the walking skeleton I have decided not to store events in ETS instead preferring a more traditional system of storing the goals directly. This is due to the required work to project a current state forward as well as doing a replace on items in ets will take a while to set up and this project is not about storage.
+
+In hindsight, using SQLite and a generator would have been quicker but I think this is a more interesting approach to show off.

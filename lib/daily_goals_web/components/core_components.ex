@@ -234,7 +234,7 @@ defmodule DailyGoalsWeb.CoreComponents do
       "default" => "bg-indigo-600 text-white shadow hover:bg-indigo-600/90",
       "destructive" => "bg-rose-50 text-rose-500 shadow-sm hover:bg-rose-700/90",
       "outline" => "border border-input bg-background shadow-sm hover:bg-zinc-50",
-      "ghost" => "hover:bg-zinc-50 bg-transparent",
+      "ghost" => "bg-transparent",
       "link" => "text-indigo-600 underline-offset-4 hover:underline"
     },
     size: %{

@@ -24,7 +24,28 @@ defmodule DailyGoalsWeb.GoalsLive do
     {:noreply, assign_form(socket, %Goal{})}
   end
 
+  def handle_event("toggle-goal", %{"id" => id}, socket) do
+    id
+    |> String.to_integer()
+    |> Goals.get_goal()
+    |> case do
+      [] ->
+        {:noreply, put_flash(socket, :error, "Goal not found")}
+
+      [{_, _, goal = %Goal{}}] ->
+        Goals.toggle_goal_completion(goal)
+
+        {:noreply,
+          socket
+          |> stream_insert(:goals, goal)}
+    end
+  end
+
   def handle_info({:goal_created, goal}, socket) do
+    {:noreply, stream_insert(socket, :goals, goal, at: 0)}
+  end
+
+  def handle_info({:goal_updated, goal}, socket) do
     {:noreply, stream_insert(socket, :goals, goal)}
   end
 
@@ -35,5 +56,9 @@ defmodule DailyGoalsWeb.GoalsLive do
       |> to_form(action: :validate)
 
     assign(socket, :form, form)
+  end
+
+  defp humanize_date(datetime) do
+    NaiveDateTime.to_date(datetime) |> Calendar.strftime("%d-%m-%Y")
   end
 end
