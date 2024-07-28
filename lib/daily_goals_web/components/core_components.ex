@@ -185,7 +185,7 @@ defmodule DailyGoalsWeb.CoreComponents do
   def simple_form(assigns) do
     ~H"""
     <.form :let={f} for={@for} as={@as} {@rest}>
-      <div class="space-y-8">
+      <div class="grid gap-3 items-center grid-cols-6">
         <%= render_slot(@inner_block, f) %>
         <div :for={action <- @actions} class="mt-2 flex items-center justify-end gap-6">
           <%= render_slot(action, f) %>

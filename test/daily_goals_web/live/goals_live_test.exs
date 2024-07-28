@@ -28,9 +28,16 @@ defmodule DailyGoalsWeb.GoalsLiveTest do
       |> render_click()
     end
 
-    # test "allows the creation of goals with numerical progress" do
-    #   :ok
-    # end
+    test "allows the creation of goals with numerical progress" do
+      {:ok, view, _html} = live(conn, ~p"/")
+
+      html =
+        view
+        |> form("#goals-form", goal: %{goal_text: "Sets of pushups", steps: 10})
+        |> render_submit()
+
+      assert html =~ "Goalie McGoalFace"
+    end
   end
 
   defp with_a_persona(context) do

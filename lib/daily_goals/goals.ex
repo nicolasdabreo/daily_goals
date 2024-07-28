@@ -11,10 +11,21 @@ defmodule DailyGoals.Goals do
   def create_goal(persona_id, params) do
     goal_id = unique_id()
 
+    steps =
+      case Integer.parse(params["steps"]) do
+        {steps, _} ->
+          steps
+
+        _ ->
+          0
+      end
+
     goal = %Goal{
       id: goal_id,
       persona_id: persona_id,
       goal_text: params["goal_text"],
+      steps: steps,
+      progress: 0,
       completed_at: nil
     }
 
@@ -36,8 +47,24 @@ defmodule DailyGoals.Goals do
     ETS.lookup(:goals, id)
   end
 
+  def update_goal_progress(%Goal{steps: steps} = goal, progress) when steps == progress do
+    update_goal(%{goal | progress: progress, completed_at: DateTime.utc_now()})
+  end
+
+  def update_goal_progress(%Goal{steps: steps} = goal, progress) when not is_nil(steps) do
+    update_goal(%{goal | progress: progress})
+  end
+
+  def toggle_goal_completion(%Goal{completed_at: nil, steps: steps, progress: progress} = goal) when progress < steps do
+    update_goal(%{goal | completed_at: DateTime.utc_now(), progress: steps})
+  end
+
   def toggle_goal_completion(%Goal{completed_at: nil} = goal) do
     update_goal(%{goal | completed_at: DateTime.utc_now()})
+  end
+
+  def toggle_goal_completion(%Goal{steps: steps, progress: progress, completed_at: _completed_at = %DateTime{}} = goal) when steps == progress do
+    update_goal(%{goal | completed_at: nil, progress: steps - 1})
   end
 
   def toggle_goal_completion(%Goal{completed_at: _completed_at = %DateTime{}} = goal) do
