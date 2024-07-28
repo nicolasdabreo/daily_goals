@@ -10,6 +10,7 @@ defmodule DailyGoals.Goals do
 
   def create_goal(persona_id, params) do
     goal_id = unique_id()
+    today = Date.utc_today()
 
     steps =
       case Integer.parse(params["steps"]) do
@@ -26,16 +27,17 @@ defmodule DailyGoals.Goals do
       goal_text: params["goal_text"],
       steps: steps,
       progress: 0,
-      completed_at: nil
+      completed_at: nil,
+      creation_date: today
     }
 
-    ETS.insert(:goals, {goal_id, persona_id, goal})
+    ETS.insert(:goals, {goal_id, today, goal})
     broadcast({:goal_created, goal})
     goal
   end
 
-  def list_goals(persona_id) do
-    match_spec = [{{:_, persona_id, :_}, [], [:"$_"]}]
+  def list_goals(date) do
+    match_spec = [{{:_, date, :_}, [], [:"$_"]}]
 
     ETS.select(:goals, match_spec)
     |> Enum.sort_by(&elem(&1, 0))
@@ -73,7 +75,7 @@ defmodule DailyGoals.Goals do
 
   defp update_goal(goal) do
     ETS.delete(:goals, goal.id)
-    ETS.insert(:goals, {goal.id, goal.persona_id, goal})
+    ETS.insert(:goals, {goal.id, goal.creation_date, goal})
     broadcast({:goal_updated, goal})
     goal
   end

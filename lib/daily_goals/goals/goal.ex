@@ -9,6 +9,7 @@ defmodule DailyGoals.Goals.Goal do
     field(:completed_at, :utc_datetime)
     field(:steps, :integer)
     field(:progress, :integer)
+    field(:creation_date, :date)
   end
 
   def changeset(goal = %Goal{}, params) do

@@ -19,9 +19,10 @@
 
 <.header>
   Welcome back <%= @persona.name %>!
+  <:subtitle>Here you can view and manage all your daily goals, as well as go back through your history and manage past goals. Please note: You may only create goals for today's date.</:subtitle>
 </.header>
 
-<section class="bg-zinc-50 rounded-lg p-4 md:p-6 lg:p-8 my-8">
+<section :if={Date.compare(@date, Date.utc_today()) == :eq} class="bg-zinc-50 rounded-lg p-4 md:p-6 lg:p-8 mt-8">
   <.simple_form id="goals-form" for={@form} phx-change="validate" phx-submit="save">
     <div class="col-span-4">
     <.input
@@ -45,6 +46,6 @@
   </.simple_form>
 </section>
 
-<ul id="goals" phx-update="stream" role="list" class="divide-y divide-zinc-100">
+<ul id="goals" phx-update="stream" role="list" class="divide-y divide-zinc-100 mt-8">
   <.goal :for={{dom_id, goal} <- @streams.goals} id={dom_id} goal={goal} persona={@persona} />
 </ul>
