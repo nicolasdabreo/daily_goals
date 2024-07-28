@@ -108,4 +108,10 @@ defmodule DailyGoalsWeb do
   defmacro __using__(which) when is_atom(which) do
     apply(__MODULE__, which, [])
   end
+
+  defimpl Phoenix.Param, for: Date do
+    def to_param(date) do
+      Date.to_string(date)
+    end
+  end
 end

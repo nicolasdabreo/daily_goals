@@ -15,6 +15,19 @@ defmodule DailyGoalsWeb.GoalsLive do
      |> stream(:goals, Goals.list_goals(socket.assigns.persona.id))}
   end
 
+  def handle_params(params, _uri, socket) do
+    date = params["date"] || Date.to_string(Date.utc_today())
+    {:ok, date} = Date.from_iso8601(date)
+    next_date = Date.add(date, 1)
+    prev_date = Date.add(date, -1)
+
+    {:noreply,
+      socket
+      |> assign(:date, date)
+      |> assign(:next_date, next_date)
+      |> assign(:previous_date, prev_date)}
+  end
+
   def handle_event("validate", %{"goal" => goal_params}, socket) do
     {:noreply, assign_form(socket, %Goal{}, goal_params)}
   end

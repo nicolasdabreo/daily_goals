@@ -24,3 +24,7 @@ For these lighter style apps that utilise ETS, I often like storing state as eve
 After doing the walking skeleton I have decided not to store events in ETS instead preferring a more traditional system of storing the goals directly. This is due to the required work to project a current state forward as well as doing a replace on items in ets will take a while to set up and this project is not about storage.
 
 In hindsight, using SQLite and a generator would have been quicker but I think this is a more interesting approach to show off.
+
+## Update 2 
+
+Now that I'm looking at adding reporting, I think shifting the data to be stored referenced to the given date rather than persona information makes the most sense. That way I can navigate on the route through dates and re-fetch the data.

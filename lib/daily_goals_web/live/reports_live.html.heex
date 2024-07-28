@@ -1,0 +1,22 @@
+<nav class="flex flex-row justify-between items-center shrink-0 mb-8 gap-3">
+  <.link navigate={~p"/#{@date}"} class="font-semibold text-indigo-600 underline">Back to goals</.link>
+  <div class="flex flex-row justify-center items-center shrink-0 gap-3">
+    <span class="text-md font-medium"><%= @date %></span>
+
+    <.button variant="outline" size="icon" phx-click={JS.navigate(~p"/reports/#{@previous_date}")}>
+      <.icon name="hero-chevron-left" class="h-5 w-5" />
+    </.button>
+
+    <.button disabled={Date.compare(@next_date, Date.utc_today()) == :gt} variant="outline" size="icon" phx-click={JS.navigate(~p"/reports/#{@next_date}")}>
+      <.icon name="hero-chevron-right" class="h-5 w-5" />
+    </.button>
+
+    <.button disabled={Date.compare(@date, Date.utc_today()) == :eq} phx-click={JS.navigate(~p"/reports/#{Date.utc_today()}")}>
+      Today
+    </.button>
+  </div>
+</nav>
+
+<.header>
+  Your reports
+</.header>

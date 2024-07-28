@@ -18,6 +18,9 @@ defmodule DailyGoalsWeb.Router do
 
     live_session :application, on_mount: [Persona] do
       live "/", GoalsLive, :index
+      live "/:date", GoalsLive, :index
+      live "/reports", ReportsLive, :index
+      live "/reports/:date", ReportsLive, :index
     end
   end
 end
