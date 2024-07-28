@@ -1,0 +1,20 @@
+# DailyGoals
+
+To start your Phoenix server:
+
+  * Run `mix setup` to install and setup dependencies
+  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+
+Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+
+Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+
+## Initial thoughts
+
+I'm going to write my pre-thoughts as well as any updates I have to direction here for clarity.
+
+To begin with, the front-end task sparked more joy on initial read so I'm going for that. I'm starting to think I might prefer front-end work overall these days but I'd have been fine working on either.
+
+I'm going to start out by adding a soft-user persona system so that we have the "idea" of users managing goals but without doing anything crazy. I think I'll also use ETS as storage seeing as its very quick to get off the ground. I might switch to DETS in order to accomodate synthetic data, that or I'll run some kind of seed function on application startup.
+
+For these lighter style apps that utilise ETS, I often like storing state as events so I _might_ do that too here -- I probably will as the reporting feature can then support some more interesting insights.
