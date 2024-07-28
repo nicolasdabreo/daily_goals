@@ -10,7 +10,14 @@ defmodule DailyGoals.Goals do
 
   def create_goal(persona_id, params) do
     goal_id = unique_id()
-    goal = %Goal{id: goal_id, persona_id: persona_id, goal_text: params["goal_text"], completed_at: nil}
+
+    goal = %Goal{
+      id: goal_id,
+      persona_id: persona_id,
+      goal_text: params["goal_text"],
+      completed_at: nil
+    }
+
     ETS.insert(:goals, {goal_id, persona_id, goal})
     broadcast({:goal_created, goal})
     goal
@@ -27,14 +34,6 @@ defmodule DailyGoals.Goals do
 
   def get_goal(id) do
     ETS.lookup(:goals, id)
-  end
-
-  def toggle_goal_completion(%Goal{completed_at: nil} = goal) do
-    goal = %{goal | completed_at: DateTime.utc_now()}
-    ETS.delete(:goals, goal.id)
-    ETS.insert(:goals, {goal.id, goal.persona_id, goal})
-    broadcast({:goal_updated, goal})
-    goal
   end
 
   def toggle_goal_completion(%Goal{completed_at: nil} = goal) do

@@ -10,9 +10,9 @@ defmodule DailyGoalsWeb.GoalsLive do
     end
 
     {:ok,
-      socket
-      |> assign_form(%Goal{})
-      |> stream(:goals, Goals.list_goals(socket.assigns.persona.id))}
+     socket
+     |> assign_form(%Goal{})
+     |> stream(:goals, Goals.list_goals(socket.assigns.persona.id))}
   end
 
   def handle_event("validate", %{"goal" => goal_params}, socket) do
@@ -21,7 +21,11 @@ defmodule DailyGoalsWeb.GoalsLive do
 
   def handle_event("save", %{"goal" => goal_params}, socket) do
     Goals.create_goal(socket.assigns.persona.id, goal_params)
-    {:noreply, assign_form(socket, %Goal{})}
+
+    {:noreply,
+     socket
+     |> assign_form(%Goal{})
+     |> put_flash(:info, "New goal created!")}
   end
 
   def handle_event("toggle-goal", %{"id" => id}, socket) do
@@ -36,8 +40,8 @@ defmodule DailyGoalsWeb.GoalsLive do
         Goals.toggle_goal_completion(goal)
 
         {:noreply,
-          socket
-          |> stream_insert(:goals, goal)}
+         socket
+         |> stream_insert(:goals, goal)}
     end
   end
 
