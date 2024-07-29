@@ -12,31 +12,42 @@ defmodule DailyGoalsWeb.GoalsLiveTest do
 
       html =
         view
-        |> form("#goals-form", goal: %{goal_text: "Goalie McGoalFace"})
+        |> form("#goals-form", goal: %{goal_text: "Do 20 pushups"})
         |> render_submit()
 
-      assert html =~ "Goalie McGoalFace"
+      assert html =~ "Do 20 pushups"
     end
 
     test "goals can be marked as completed", %{conn: conn, goals: [goal | _rest]} do
       {:ok, view, html} = live(conn, ~p"/")
 
-      refute html =~ "Completed at"
-
-      view
-      |> element("#goals-#{goal.id}")
-      |> render_click()
-    end
-
-    test "allows the creation of goals with numerical progress" do
-      {:ok, view, _html} = live(conn, ~p"/")
+      refute html =~ "Completed on"
 
       html =
         view
-        |> form("#goals-form", goal: %{goal_text: "Sets of pushups", steps: 10})
-        |> render_submit()
+        |> element("#goals-#{goal.id}-complete-button")
+        |> render_click()
 
-      assert html =~ "Goalie McGoalFace"
+      assert html =~ "Completed on"
+    end
+
+    test "allows the creation of goals with numerical progress", %{conn: conn} do
+      {:ok, view, _html} = live(conn, ~p"/")
+
+      # Create the goal
+      view
+      |> form("#goals-form", goal: %{goal_text: "Sets of pushups", steps: 10})
+      |> render_submit()
+
+      goal = Goals.list_goals(Date.utc_today()) |> List.first()
+
+      # Change the goal's progress
+      view
+      |> form("#progress-form-#{goal.id}", %{progress: 5})
+      |> render_change()
+
+      # Check that the goal's progress changed
+      assert element(view, "##{goal.id}-progress", "step-#{goal.progress}")
     end
   end
 
@@ -50,7 +61,7 @@ defmodule DailyGoalsWeb.GoalsLiveTest do
   end
 
   defp and_some_set_goals(context) do
-    goals = for i <- 1..Enum.random(1..5), do: Goals.create_goal(context.persona.id, %{"goal_text" => "Goal #{i}"})
+    goals = for i <- 1..Enum.random(1..5), do: Goals.create_goal(context.persona.id, %{"goal_text" => "Goal #{i}", "steps" => ""})
 
     context
     |> Map.put(:goals, goals)

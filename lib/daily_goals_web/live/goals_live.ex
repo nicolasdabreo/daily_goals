@@ -66,6 +66,11 @@ defmodule DailyGoalsWeb.GoalsLive do
     {:noreply, stream_insert(socket, :goals, goal)}
   end
 
+  def handle_event("generate-data", _params, socket) do
+    Goals.generate_seed_data(socket.assigns.persona.id, socket.assigns.date)
+    {:noreply, socket}
+  end
+
   def handle_info({:goal_created, goal}, socket) do
     {:noreply, stream_insert(socket, :goals, goal, at: 0)}
   end
@@ -125,8 +130,8 @@ defmodule DailyGoalsWeb.GoalsLive do
           <% else %>
             <%= if @goal.steps > 1 do %>
               <div class="w-full">
-                <form phx-change="update-progress" phx-value-id={@goal.id} class="w-full">
-                  <input name="progress" id={"#{@id}-#{@goal.id}-slider"} type="range" min="0" max={@goal.steps} step="1" value={@goal.progress} class="w-full" />
+                <form id={"progress-form-#{@goal.id}"} phx-change="update-progress" phx-value-id={@goal.id} class="w-full">
+                  <input id={"#{@goal.id}-progress"} data-value={"step-#{@goal.progress}"} name="progress" id={"#{@id}-#{@goal.id}-slider"} type="range" min="0" max={@goal.steps} step="1" value={@goal.progress} class="w-full" />
                   <div class="flex justify-between mt-2 text-sm font-medium text-gray-700">
                     <span>0</span>
                     <span><%= @goal.steps %></span>
@@ -139,6 +144,7 @@ defmodule DailyGoalsWeb.GoalsLive do
       </div>
       <div class="flex flex-none items-center gap-x-4 text-zinc-400">
         <.button
+          id={"goals-#{@id}-complete-button"}
           size="icon"
           variant="ghost"
           phx-click="toggle-goal"
@@ -148,6 +154,7 @@ defmodule DailyGoalsWeb.GoalsLive do
             @goal.completed_at && "text-emerald-500 group-hover:text-emerald-600"
           ]}
         >
+          <span class="sr-only">Toggle completion</span>
           <.icon name="hero-check-circle" class="h-8 w-8" />
         </.button>
       </div>

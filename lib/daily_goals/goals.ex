@@ -8,9 +8,8 @@ defmodule DailyGoals.Goals do
 
   def init_table, do: ETS.new(:goals, [:set, :public, :named_table, read_concurrency: true])
 
-  def create_goal(persona_id, params) do
+  def create_goal(persona_id, params, date \\ Date.utc_today()) do
     goal_id = unique_id()
-    today = Date.utc_today()
 
     steps =
       case Integer.parse(params["steps"]) do
@@ -28,10 +27,10 @@ defmodule DailyGoals.Goals do
       steps: steps,
       progress: 0,
       completed_at: nil,
-      creation_date: today
+      creation_date: date
     }
 
-    ETS.insert(:goals, {goal_id, today, goal})
+    ETS.insert(:goals, {goal_id, date, goal})
     broadcast({:goal_created, goal})
     goal
   end
@@ -78,6 +77,33 @@ defmodule DailyGoals.Goals do
     ETS.insert(:goals, {goal.id, goal.creation_date, goal})
     broadcast({:goal_updated, goal})
     goal
+  end
+
+  @seed_goals [
+    %{"goal_text" => "Call mum", "steps" => ""},
+    %{"goal_text" => "Learn Polish for 10 minutes", "steps" => "10"},
+    %{"goal_text" => "Finish reading a book", "steps" => ""},
+    %{"goal_text" => "Write a blog post", "steps" => "5"},
+    %{"goal_text" => "Go for a run", "steps" => "5"},
+    %{"goal_text" => "Prepare a presentation", "steps" => "3"},
+    %{"goal_text" => "Clean the house", "steps" => "3"},
+    %{"goal_text" => "Complete Elixir project", "steps" => ""},
+    %{"goal_text" => "Meditate", "steps" => "1"},
+    %{"goal_text" => "Cook dinner", "steps" => "3"},
+    %{"goal_text" => "Organize workspace", "steps" => ""},
+    %{"goal_text" => "Plan vacation", "steps" => "4"},
+    %{"goal_text" => "Update resume", "steps" => "2"},
+    %{"goal_text" => "Practice guitar", "steps" => "1"},
+    %{"goal_text" => "Read an article", "steps" => ""},
+    %{"goal_text" => "Grocery shopping", "steps" => "2"},
+    %{"goal_text" => "Water plants", "steps" => ""},
+    %{"goal_text" => "Fix the bike", "steps" => "2"},
+    %{"goal_text" => "Learn a new recipe", "steps" => "3"},
+    %{"goal_text" => "Call a friend", "steps" => ""}
+  ]
+
+  def generate_seed_data(persona_id, date) do
+    for _i <- 1..Enum.random(2..10), do: create_goal(persona_id, Enum.random(@seed_goals), date)
   end
 
   def change_goal(goal = %Goal{}, params) do
