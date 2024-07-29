@@ -53,7 +53,13 @@ defmodule DailyGoalsWeb.GoalsLiveTest do
 
   defp with_a_persona(context) do
     persona = Persona.generate_persona()
-    conn = Plug.Test.init_test_session(context.conn, %{persona_id: persona.id, persona_name: persona.name, persona_emoji: persona.emoji})
+
+    conn =
+      Plug.Test.init_test_session(context.conn, %{
+        persona_id: persona.id,
+        persona_name: persona.name,
+        persona_emoji: persona.emoji
+      })
 
     context
     |> Map.put(:persona, persona)
@@ -61,7 +67,9 @@ defmodule DailyGoalsWeb.GoalsLiveTest do
   end
 
   defp and_some_set_goals(context) do
-    goals = for i <- 1..Enum.random(1..5), do: Goals.create_goal(context.persona.id, %{"goal_text" => "Goal #{i}", "steps" => ""})
+    goals =
+      for i <- 1..Enum.random(1..5),
+          do: Goals.create_goal(context.persona.id, %{"goal_text" => "Goal #{i}", "steps" => ""})
 
     context
     |> Map.put(:goals, goals)

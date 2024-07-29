@@ -22,11 +22,11 @@ defmodule DailyGoalsWeb.GoalsLive do
     prev_date = Date.add(date, -1)
 
     {:noreply,
-      socket
-      |> assign(:date, date)
-      |> assign(:next_date, next_date)
-      |> assign(:previous_date, prev_date)
-      |> stream(:goals, Goals.list_goals(date))}
+     socket
+     |> assign(:date, date)
+     |> assign(:next_date, next_date)
+     |> assign(:previous_date, prev_date)
+     |> stream(:goals, Goals.list_goals(date))}
   end
 
   def handle_event("validate", %{"goal" => goal_params}, socket) do
@@ -130,8 +130,24 @@ defmodule DailyGoalsWeb.GoalsLive do
           <% else %>
             <%= if @goal.steps > 1 do %>
               <div class="w-full">
-                <form id={"progress-form-#{@goal.id}"} phx-change="update-progress" phx-value-id={@goal.id} class="w-full">
-                  <input id={"#{@goal.id}-progress"} data-value={"step-#{@goal.progress}"} name="progress" id={"#{@id}-#{@goal.id}-slider"} type="range" min="0" max={@goal.steps} step="1" value={@goal.progress} class="w-full" />
+                <form
+                  id={"progress-form-#{@goal.id}"}
+                  phx-change="update-progress"
+                  phx-value-id={@goal.id}
+                  class="w-full"
+                >
+                  <input
+                    id={"#{@goal.id}-progress"}
+                    data-value={"step-#{@goal.progress}"}
+                    name="progress"
+                    id={"#{@id}-#{@goal.id}-slider"}
+                    type="range"
+                    min="0"
+                    max={@goal.steps}
+                    step="1"
+                    value={@goal.progress}
+                    class="w-full"
+                  />
                   <div class="flex justify-between mt-2 text-sm font-medium text-gray-700">
                     <span>0</span>
                     <span><%= @goal.steps %></span>

@@ -57,6 +57,10 @@ defmodule DailyGoals.Goals do
     update_goal(%{goal | progress: progress, completed_at: DateTime.utc_now()})
   end
 
+  def update_goal_progress(%Goal{steps: steps} = goal, progress) when not is_nil(steps) do
+    update_goal(%{goal | progress: progress})
+  end
+
   @doc """
   Toggles the completion state of a Goal by changing its completed at to the current date,
   or by nilifying it.
@@ -64,11 +68,8 @@ defmodule DailyGoals.Goals do
   This has some side-effects for numerical goals to improve UX, a completed goal will have its
   progress maxed, an incomplete goal will have its progress reverted to one number before max.
   """
-  def update_goal_progress(%Goal{steps: steps} = goal, progress) when not is_nil(steps) do
-    update_goal(%{goal | progress: progress})
-  end
-
-  def toggle_goal_completion(%Goal{completed_at: nil, steps: steps, progress: progress} = goal) when progress < steps do
+  def toggle_goal_completion(%Goal{completed_at: nil, steps: steps, progress: progress} = goal)
+      when progress < steps do
     update_goal(%{goal | completed_at: DateTime.utc_now(), progress: steps})
   end
 
@@ -76,7 +77,10 @@ defmodule DailyGoals.Goals do
     update_goal(%{goal | completed_at: DateTime.utc_now()})
   end
 
-  def toggle_goal_completion(%Goal{steps: steps, progress: progress, completed_at: _completed_at = %DateTime{}} = goal) when steps == progress do
+  def toggle_goal_completion(
+        %Goal{steps: steps, progress: progress, completed_at: _completed_at = %DateTime{}} = goal
+      )
+      when steps == progress do
     update_goal(%{goal | completed_at: nil, progress: steps - 1})
   end
 

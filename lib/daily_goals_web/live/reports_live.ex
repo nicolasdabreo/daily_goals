@@ -12,9 +12,9 @@ defmodule DailyGoalsWeb.ReportsLive do
     prev_date = Date.add(date, -1)
 
     {:noreply,
-      socket
-      |> assign(:date, date)
-      |> assign(:next_date, next_date)
-      |> assign(:previous_date, prev_date)}
+     socket
+     |> assign(:date, date)
+     |> assign(:next_date, next_date)
+     |> assign(:previous_date, prev_date)}
   end
 end

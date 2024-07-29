@@ -1,17 +1,29 @@
 <nav class="flex flex-row justify-between items-center shrink-0 mb-8 gap-3">
-  <.link navigate={~p"/reports/#{@date}"} class="font-semibold text-indigo-600 underline">View reports</.link>
+  <.link navigate={~p"/reports/#{@date}"} class="font-semibold text-indigo-600 underline">
+    View reports
+  </.link>
   <div class="flex flex-row justify-center items-center shrink-0 gap-3">
     <span class="text-md font-medium"><%= @date %></span>
 
     <.button variant="outline" size="icon" phx-click={JS.navigate(~p"/#{@previous_date}")}>
-      <span class="sr-only">Navigate to <%= @previous_date %></span><.icon name="hero-chevron-left" class="h-5 w-5" />
+      <span class="sr-only">Navigate to <%= @previous_date %></span>
+      <.icon name="hero-chevron-left" class="h-5 w-5" />
     </.button>
 
-    <.button disabled={Date.compare(@next_date, Date.utc_today()) == :gt} variant="outline" size="icon" phx-click={JS.navigate(~p"/#{@next_date}")}>
-      <span class="sr-only">Navigate to <%= @next_date %></span><.icon name="hero-chevron-right" class="h-5 w-5" />
+    <.button
+      disabled={Date.compare(@next_date, Date.utc_today()) == :gt}
+      variant="outline"
+      size="icon"
+      phx-click={JS.navigate(~p"/#{@next_date}")}
+    >
+      <span class="sr-only">Navigate to <%= @next_date %></span>
+      <.icon name="hero-chevron-right" class="h-5 w-5" />
     </.button>
 
-    <.button disabled={Date.compare(@date, Date.utc_today()) == :eq} phx-click={JS.navigate(~p"/#{Date.utc_today()}")}>
+    <.button
+      disabled={Date.compare(@date, Date.utc_today()) == :eq}
+      phx-click={JS.navigate(~p"/#{Date.utc_today()}")}
+    >
       <span class="sr-only">Navigate to </span>Today
     </.button>
   </div>
@@ -19,26 +31,26 @@
 
 <.header>
   Welcome back <%= @persona.name %>!
-  <:subtitle>Here you can view and manage all your daily goals, as well as go back through your history and manage past goals. Please note: You may only create goals for today's date.</:subtitle>
+  <:subtitle>
+    Here you can view and manage all your daily goals, as well as go back through your history and manage past goals. Please note: You may only create goals for today's date.
+  </:subtitle>
 </.header>
 
-<section :if={Date.compare(@date, Date.utc_today()) == :eq} class="bg-zinc-50 rounded-lg p-4 md:p-6 lg:p-8 mt-8">
+<section
+  :if={Date.compare(@date, Date.utc_today()) == :eq}
+  class="bg-zinc-50 rounded-lg p-4 md:p-6 lg:p-8 mt-8"
+>
   <.simple_form id="goals-form" for={@form} phx-change="validate" phx-submit="save">
     <div class="col-span-4">
-    <.input
-      required="true"
-      placeholder="Study Polish for 10 minutes..."
-      field={@form[:goal_text]}
-      label="Goal"
-    />
+      <.input
+        required="true"
+        placeholder="Study Polish for 10 minutes..."
+        field={@form[:goal_text]}
+        label="Goal"
+      />
     </div>
     <div class="col-span-2">
-    <.input
-      placeholder="0"
-      field={@form[:steps]}
-      label="Steps (optional)"
-      type="number"
-    />
+      <.input placeholder="0" field={@form[:steps]} label="Steps (optional)" type="number" />
     </div>
     <:actions>
       <.button>Save goal</.button>
